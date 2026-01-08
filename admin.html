@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMIN PANEL | DRAKESTYLE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+body{margin:0;padding:20px;font-family:Arial;color:#fff;background:#000;}
+h1{color:#00aaff;text-align:center;margin-bottom:20px;}
+.group-section{margin-bottom:30px;border:1px solid #222;padding:15px;border-radius:10px;}
+.group-section h2 input{background:none;border:none;color:#fff;font-size:18px;font-weight:bold;width:80%;}
+.member-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.member-item input{padding:5px;border-radius:5px;border:none;}
+.member-item img{width:40px;height:40px;border-radius:50%;}
+.member-item button{padding:5px 10px;border:none;border-radius:5px;background:#00aaff;color:#fff;cursor:pointer;}
+.member-item button:hover{background:#0088cc;}
+.add-member{margin-top:10px;}
+.add-member input{padding:5px;border-radius:5px;border:none;margin-right:5px;}
+.add-member button{padding:5px 10px;background:#00aaff;color:#fff;border:none;border-radius:5px;cursor:pointer;}
+.add-member button:hover{background:#0088cc;}
+#hero-logo{width:100px;margin:20px 0;}
+.save-btn{margin-top:20px;padding:10px 20px;background:#00aaff;border:none;border-radius:5px;color:#fff;font-weight:bold;cursor:pointer;}
+.save-btn:hover{background:#0088cc;}
+.back-btn{display:inline-block;margin-bottom:10px;text-decoration:none;color:#00aaff;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">← ไปหน้า HOME</a>
+<h1>ADMIN PANEL | DRAKESTYLE</h1>
+
+<div>
+  <label>ใส่รูป HERO หน้าแรก: </label>
+  <input type="text" id="heroInput" placeholder="URL รูป">
+  <button onclick="setHeroLogo()">SET HERO</button>
+  <br>
+  <img id="hero-logo" src="" alt="HERO LOGO">
+</div>
+
+<hr>
+
+<div>
+  <label>เปลี่ยนพื้นหลัง: </label><input type="color" id="bgInput" value="#000000">
+  <label>เปลี่ยน FONT: </label><input type="text" id="fontInput" placeholder="Arial, Helvetica, sans-serif">
+</div>
+
+<hr>
+
+<div id="groups-container"></div>
+<button class="save-btn" onclick="saveAll()">บันทึกทั้งหมด</button>
+
+<script>
+// ตรวจสอบ login
+if(localStorage.getItem('loggedIn')!=='true'){
+  alert('กรุณา login ADMIN ก่อน');
+  window.location.href='login.html';
+}
+
+// โหลดข้อมูล
+let stored = JSON.parse(localStorage.getItem('membersData')) || {};
+let membersData = stored.members || {
+  comingsoon:[{name:'COMING SOON', fb:'https://facebook.com/comingsoon', img:''}],
+  drakestyle:[{name:'DRAKESTYLE', fb:'https://facebook.com/drakestyle', img:''}],
+  tested:[{name:"TESTE'D", fb:'https://facebook.com/tested', img:''}]
+};
+let heroLogo = stored.hero || '';
+let bgColor = stored.bg || '#000';
+let fontFamily = stored.font || 'Arial, Helvetica, sans-serif';
+
+// แสดงค่า
+document.getElementById('hero-logo').src = heroLogo;
+document.body.style.backgroundColor = bgColor;
+document.body.style.fontFamily = fontFamily;
+
+function setHeroLogo(){
+  heroLogo = document.getElementById('heroInput').value.trim();
+  document.getElementById('hero-logo').src = heroLogo;
+}
+
+// แสดงกลุ่มสมาชิก
+const groupsContainer = document.getElementById('groups-container');
+
+function renderGroups(){
+  groupsContainer.innerHTML='';
+  for(let group in membersData){
+    const groupDiv = document.createElement('div');
+    groupDiv.className='group-section';
+    groupDiv.innerHTML=`<h2><input class="group-name-input" value="${group.toUpperCase()}"></h2>`;
+    
+    membersData[group].forEach((m,i)=>{
+      const div = document.createElement('div');
+      div.className='member-item';
+      div.innerHTML=`
+        <img src="${m.img || 'https://graph.facebook.com/'+m.fb.split('/').pop()+'/picture?type=large'}">
+        <input type="text" value="${m.name}" class="name-input">
+        <input type="text" value="${m.fb}" class="fb-input">
+        <input type="text" value="${m.img}" class="img-input">
+        <button onclick="deleteMember('${group}',${i})">ลบ</button>
+      `;
+      groupDiv.appendChild(div);
+    });
+
+    const addDiv=document.createElement('div');
+    addDiv.className='add-member';
+    addDiv.innerHTML=`
+      <input type="text" placeholder="Name" class="new-name">
+      <input type="text" placeholder="Facebook Link" class="new-fb">
+      <input type="text" placeholder="Profile URL" class="new-img">
+      <button onclick="addMember('${group}')">เพิ่มสมาชิก</button>
+    `;
+    groupDiv.appendChild(addDiv);
+
+    groupsContainer.appendChild(groupDiv);
+  }
+}
+
+function deleteMember(group,i){
+  membersData[group].splice(i,1);
+  renderGroups();
+}
+
+function addMember(group){
+  const parent=event.target.parentElement;
+  const name=parent.querySelector('.new-name').value.trim();
+  const fb=parent.querySelector('.new-fb').value.trim();
+  const img=parent.querySelector('.new-img').value.trim();
+  if(name && fb){
+    membersData[group].push({name,fb,img});
+    renderGroups();
+  } else alert('กรุณากรอก Name และ Facebook Link');
+}
+
+function saveAll(){
+  document.querySelectorAll('.group-section').forEach((g,i)=>{
+    const oldGroup=Object.keys(membersData)[i];
+    const newGroup=g.querySelector('.group-name-input').value.trim().toLowerCase().replace(/\s/g,'')||oldGroup;
+    if(newGroup!==oldGroup){
+      membersData[newGroup]=membersData[oldGroup];
+      delete membersData[oldGroup];
+    }
+    membersData[newGroup].forEach((m,j)=>{
+      const div=g.querySelectorAll('.member-item')[j];
+      m.name=div.querySelector('.name-input').value.trim();
+      m.fb=div.querySelector('.fb-input').value.trim();
+      m.img=div.querySelector('.img-input').value.trim();
+    });
+  });
+
+  const bg=document.getElementById('bgInput').value;
+  const font=document.getElementById('fontInput').value.trim()||'Arial, Helvetica, sans-serif';
+
+  localStorage.setItem('membersData',JSON.stringify({members:membersData, hero:heroLogo,bg,bg,font}));
+  alert('บันทึกเรียบร้อย! รีหน้า index.html หรือ listname.html จะเห็นผลทันที');
+}
+
+renderGroups();
+</script>
+</body>
+</html>
