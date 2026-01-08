@@ -3,53 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LISTNAME | DRAKESTYLE</title>
+<title>DRAKESTYLE</title>
 
 <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
+  font-family: Arial, Helvetica, sans-serif;
   background: #000;
   color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
   text-align: center;
 }
 
-h1 {
-  margin-top: 60px;
-  letter-spacing: 3px;
+/* HEADER */
+header {
+  padding: 40px 20px;
+  border-bottom: 1px solid #222;
 }
 
-.list {
-  margin-top: 40px;
+header h1 {
+  font-size: 48px;
+  letter-spacing: 4px;
 }
 
-.member {
-  width: 260px;
-  margin: 15px auto;
-  padding: 15px;
-  border: 3px solid #fff;
-  border-radius: 16px;
+header p {
+  margin-top: 10px;
+  color: #aaa;
 }
 
-a {
-  display: inline-block;
-  margin-top: 40px;
-  color: #00aaff;
+/* NAV */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  border-bottom: 1px solid #222;
+}
+
+nav a {
+  color: #fff;
   text-decoration: none;
+}
+
+/* HERO */
+.hero {
+  padding: 80px 20px;
+}
+
+.hero-link {
+  text-decoration: none;
+}
+
+.hero-box {
+  display: inline-block;
+  padding: 25px 50px;
+  border: 3px solid #fff;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.hero-box h2 {
+  font-size: 36px;
+  letter-spacing: 3px;
+  color: #fff;
+}
+
+.hero-box:hover {
+  box-shadow:
+    inset 0 0 0 1px #00aaff,
+    0 0 14px rgba(0,170,255,0.5);
+  background: rgba(0,170,255,0.06);
+}
+
+/* SECTION */
+.section {
+  padding: 60px 20px;
+  border-top: 1px solid #222;
+}
+
+.section h3 {
+  font-size: 28px;
+  margin-bottom: 40px;
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  width: 260px;
+  padding: 25px;
+  background: #111;
+  border: 3px solid #fff;
+  border-radius: 18px;
+  transition: 0.3s;
+}
+
+.card h2 {
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #fff;
+  font-size: 14px;
+}
+
+.card:hover {
+  box-shadow:
+    inset 0 0 0 1px #00aaff,
+    0 0 14px rgba(0,170,255,0.5);
+  background: rgba(0,170,255,0.06);
+  transform: scale(1.05);
+}
+
+/* FOOTER */
+footer {
+  margin-top: 60px;
+  padding: 30px;
+  border-top: 1px solid #222;
+  font-size: 14px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>LISTNAME</h1>
-
-<div class="list">
-  <div class="member">DRAKESTYLE – LEADER</div>
-  <div class="member">TESTED – MEMBER</div>
-  <div class="member">COMING SOON – MEMBER</div>
-</div>
-
-<a href="index.html">← BACK TO HOME</a>
-
-</body>
-</html>
+<header>
+  <h1>DRAKESTYLE</h1>
+  <p>BET WE
